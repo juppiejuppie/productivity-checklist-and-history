@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Productivity History</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .history-item {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>📖 Productivity History</h2>
+  <div id="historyList"></div>
+  <a href="index.html"><button>🔙 Back to Checklist</button></a>
+
+  <script>
+    function loadHistory() {
+      let history = JSON.parse(localStorage.getItem("recapHistory")) || [];
+      let historyList = document.getElementById("historyList");
+
+      if (history.length === 0) {
+        historyList.innerHTML = "<p>No productivity history found.</p>";
+        return;
+      }
+
+      history.forEach(entry => {
+        let item = document.createElement("div");
+        item.className = "history-item";
+        item.innerHTML = `<strong>${entry.date}</strong> - ✅ ${entry.completedTasks} tasks | ⏱️ ${entry.totalTimeSpent}`;
+        historyList.appendChild(item);
+      });
+    }
+
+    loadHistory();
+  </script>
+</body>
+
+</html>
