@@ -5,7 +5,21 @@
   <meta charset="UTF-8">
   <title>Productivity History</title>
   <style>
+    #pageTitle span:focus {
+      outline: none;
+      /* Removes blue glow */
+    }
 
+    #pageTitle span {
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      display: inline-block;
+      /* Helps cursor positioning */
+      min-width: 100px;
+      /* Prevents cursor misalignment */
+    }
+    
     body {
       font-family: 'Inter', sans-serif;
       background-color: #fff;
@@ -59,7 +73,7 @@
 </head>
 
 <body>
-  <h2>📖 Productivity History</h2>
+  <h2 id="pageTitle" >📖 Productivity History</h2>
   <div id="historyList"></div>
   <a href="index.html">
     <button id="backBtn">🔙 Back to Checklist</button>
