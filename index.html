@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Productivity Checklist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    #pageTitle span:focus {
+      outline: none;
+      /* Removes blue glow */
+    }
+
+    #pageTitle span {
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      display: inline-block;
+      /* Helps cursor positioning */
+      min-width: 100px;
+      /* Prevents cursor misalignment */
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fff;
+      color: #111;
+      max-width: none;
+      margin: 0;
+      padding: 0rem 1rem 2rem 1rem;
+      /* top right bottom left */
+      line-height: 1.6;
+    }
+
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .task input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-right: 0.75rem;
+      accent-color: #555;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* When the checkbox is checked inside a .checked task, make it Notion blue */
+    .task.checked input[type="checkbox"] {
+      accent-color: #2f80ed;
+    }
+
+    .task input[type="text"] {
+      flex: 1.5;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      padding: 4px;
+      outline: none;
+      margin-right: 1rem;
+    }
+
+    .task input[type="number"] {
+      flex: 0 0 40px;
+      text-align: right;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      padding: 2px 4px;
+      -moz-appearance: textfield;
+      /* Firefox */
+      appearance: textfield;
+      /* Modern browsers */
+      margin-right: 0.75rem;
+      outline: none;
+      /* Remove blue glow on focus */
+    }
+
+    /* 🔽 Remove spinner buttons in Chrome, Safari, Edge */
+    .task input[type="number"]::-webkit-outer-spin-button,
+    .task input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .stopwatch {
+      width: 50px;
+      font-family: sans-serif;
+      font-size: 1rem;
+      text-align: center;
+      color: #444;
+      margin-right: 0.5rem;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0 0.25rem;
+      height: 30px;
+      width: 30px;
+      user-select: none;
+      outline: none;
+      transition: background 0.2s ease;
+    }
+
+    .icon-button i {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .task.checked input[type="text"],
+    .task.checked input[type="number"] {
+      color: #aaa;
+      text-decoration: line-through;
+      /* Strike through text and minutes */
+    }
+
+    .task.checked .stopwatch,
+    .task.checked .icon-button i {
+      color: #aaa;
+      /* Grey out stopwatch and icons */
+      pointer-events: none;
+      /* Optional: disable clicking the buttons */
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      background: #f3f3f3;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e8e8e8;
+    }
+
+    #totalTime {
+      margin-top: 1.5rem;
+      font-weight: 500;
+    }
+
+    #totalTimeSpent {
+      font-weight: 500;
+    }
+
+    #addTaskBtn {
+      margin-top: 0.25rem;
+      padding: 6px 12px;
+      font-size: 1rem;
+      color: #6b6b6b;
+      /* Notion-like gray */
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    #addTaskBtn:hover {
+      color: #2f80ed;
+      /* Notion blue on hover */
+      background: rgba(47, 128, 237, 0.1);
+      border-radius: 4px;
+    }
+
+    #recapBtn {
+      margin-top: 0rem;
+      font-size: 1rem;
+      color: #6b6b6b;
+      /* Notion-like gray */
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      width: fit-content;
+    }
+
+    #recapBtn:hover {
+      color: #2f80ed;
+      /* Notion blue on hover */
+      background: rgba(47, 128, 237, 0.1);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2 id="pageTitle">📝 <span contenteditable="true" oninput="updateTitle()">Productivity Checklist</span></h2>
+  <div id="tasks"></div>
+  <button id="addTaskBtn" onclick="addTask()">+ New</button>
+  <p id="totalTime">⏳ Total Time Remaining: 0h 0m</p>
+  <p id="totalTimeSpent">⏱️ Total Time Spent: 0h 0m</p>
+  <a href="history.html">
+    <button id="recapBtn">📖 View Productivity History</button>
+  </a>
+
+  <script>
+    function updateTitle() {
+      const titleEl = document.querySelector("#pageTitle span");
+      document.title = titleEl.textContent; // Updates browser tab title
+    }
+
+    const tasksDiv = document.getElementById("tasks");
+    const totalTimeEl = document.getElementById("totalTime");
+    const totalTimeSpentEl = document.getElementById("totalTimeSpent");
+    let tasks = [];
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function updateTotalTimeSpent() {
+      const totalSpentSeconds = tasks.reduce((sum, task) => sum + task.elapsedSeconds, 0);
+      const hours = Math.floor(totalSpentSeconds / 3600);
+      const mins = Math.floor((totalSpentSeconds % 3600) / 60);
+      totalTimeSpentEl.textContent = `⏱️ Total Time Spent: ${hours}h ${mins}m`;
+    }
+
+    function addTask(name = "", minutes = "") {
+      const wrapper = document.createElement("div");
+      wrapper.className = "task";
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.placeholder = "Task";
+      nameInput.value = name;
+
+      const minInput = document.createElement("input");
+      minInput.type = "number";
+      minInput.placeholder = "Min";
+      minInput.value = minutes;
+      minInput.oninput = updateTotalTime;
+
+      const stopwatchDisplay = document.createElement("div");
+      stopwatchDisplay.className = "stopwatch";
+      stopwatchDisplay.textContent = "00:00";
+
+      const playStopButton = document.createElement("button");
+      playStopButton.className = "icon-button";
+      playStopButton.innerHTML = '<i class="fa-solid fa-play"></i>';
+
+      const resetButton = document.createElement("button");
+      resetButton.className = "icon-button";
+      resetButton.innerHTML = '<i class="fa-solid fa-rotate-left"></i>';
+
+      let elapsedSeconds = 0;
+      let intervalId = null;
+      let running = false;
+
+      playStopButton.onclick = () => {
+        if (!running) {
+          running = true;
+          playStopButton.innerHTML = '<i class="fa-solid fa-stop"></i>';
+          intervalId = setInterval(() => {
+            elapsedSeconds++;
+            stopwatchDisplay.textContent = formatTime(elapsedSeconds);
+            task.elapsedSeconds = elapsedSeconds;
+            updateTotalTimeSpent();
+          }, 1000);
+        } else {
+          running = false;
+          playStopButton.innerHTML = '<i class="fa-solid fa-play"></i>';
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+      };
+
+      resetButton.onclick = () => {
+        elapsedSeconds = 0;
+        stopwatchDisplay.textContent = "00:00";
+        if (intervalId) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+        running = false;
+        playStopButton.innerHTML = '<i class="fa-solid fa-play"></i>';
+        task.elapsedSeconds = 0;
+        updateTotalTimeSpent();
+      };
+
+      wrapper.appendChild(checkbox);
+      wrapper.appendChild(nameInput);
+      wrapper.appendChild(minInput);
+      wrapper.appendChild(stopwatchDisplay);
+      wrapper.appendChild(playStopButton);
+      wrapper.appendChild(resetButton);
+
+      tasksDiv.appendChild(wrapper);
+
+      checkbox.onchange = () => {
+        wrapper.classList.toggle("checked", checkbox.checked);
+        updateTotalTime();
+      };
+
+      const task = {checkbox, minInput, elapsedSeconds};
+      tasks.push(task);
+      updateTotalTime();
+    }
+
+    function updateTotalTime() {
+      let totalMinutes = 0;
+      for (const task of tasks) {
+        if (!task.checkbox.checked) {
+          totalMinutes += parseInt(task.minInput.value) || 0;
+        }
+      }
+      const hours = Math.floor(totalMinutes / 60);
+      const mins = totalMinutes % 60;
+      totalTimeEl.textContent = `⏳ Total Time Remaining: ${hours}h ${mins}m`;
+    }
+
+    for (let i = 0; i < 3; i++) addTask();
+
+    function saveDailyRecap() {
+      const completedTasks = tasks.filter(task => task.checkbox.checked).length;
+      const totalSpentSeconds = tasks.reduce((sum, task) => sum + task.elapsedSeconds, 0);
+      const hours = Math.floor(totalSpentSeconds / 3600);
+      const mins = Math.floor((totalSpentSeconds % 3600) / 60);
+
+      const recapData = {
+        date: new Date().toLocaleDateString(),
+        completedTasks: completedTasks,
+        totalTimeSpent: `${hours}h ${mins}m`
+      };
+
+      // Save to local storage
+      let history = JSON.parse(localStorage.getItem("recapHistory")) || [];
+      history.push(recapData);
+      localStorage.setItem("recapHistory", JSON.stringify(history));
+
+      console.log(`📊 Daily Recap Saved Automatically\n✅ ${completedTasks} tasks completed\n⏱️ ${hours}h ${mins}m spent`);
+    }
+
+    function scheduleDailyRecap() {
+      setInterval(() => {
+        const now = new Date();
+        if (now.getHours() === 23 && now.getMinutes() === 59) {
+          saveDailyRecap();
+        }
+      }, 60000); // Check every minute
+    }
+
+    // Start automatic saving when the page loads
+    scheduleDailyRecap();
+
+    function showRecapHistory() {
+      let history = JSON.parse(localStorage.getItem("recapHistory")) || [];
+      if (history.length === 0) {
+        alert("No recap data found!");
+        return;
+      }
+
+      let message = "📅 Productivity History\n";
+      history.forEach(entry => {
+        message += `📌 ${entry.date} - ✅ ${entry.completedTasks} tasks | ⏱️ ${entry.totalTimeSpent}\n`;
+      });
+
+      alert(message);
+    }
+
+
+
+  </script>
+</body>
+
+</html>
