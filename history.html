@@ -15,13 +15,34 @@
       border-bottom: 1px solid #ddd;
       padding: 10px 0;
     }
+
+    #backBtn {
+      margin-top: 0rem;
+      font-size: 1rem;
+      color: #6b6b6b; /* Notion-like gray */
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      width: fit-content;
+    }
+    
+    #backBtn:hover {
+      color: #2f80ed; /* Notion blue on hover */
+      background: rgba(47, 128, 237, 0.1);
+      border-radius: 4px;
+    }
+
   </style>
 </head>
 
 <body>
   <h2>📖 Productivity History</h2>
   <div id="historyList"></div>
-  <a href="index.html"><button>🔙 Back to Checklist</button></a>
+  <a href="index.html">
+    <button id="backBtn">🔙 Back to Checklist</button>
+  </a>
 
   <script>
     function loadHistory() {
